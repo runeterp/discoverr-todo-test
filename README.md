@@ -8,6 +8,12 @@ This application is made using React(framework), Material-UI(component library) 
 
 The application is a very basic todo app. However, only the UI is made. All the functionality is not yet developed. So as you try to interact with the application you will be met with a bunch of alerts. Every time you encounter an alert it will contain a reference to a task in the list below. The task will describe what needs to be done.
 
+### Docs
+
+- [React](https://beta.reactjs.org/learn)
+- [Material UI](https://mui.com/material-ui/getting-started/overview/)
+- [Zustand](https://github.com/pmndrs/zustand)
+
 ## Tasks
 
 1. Add toggle functionality to the list of todos. When you click on the todo it should toggle the the checkbox to the left. Extend the `todoStore` in a way so it provides a function to toggle a todo.
