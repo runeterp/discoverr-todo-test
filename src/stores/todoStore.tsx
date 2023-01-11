@@ -61,7 +61,20 @@ export const useTodoStore = create(
       todos: initialTodos,
     },
     (set) => ({
-      // ...
+      toogleCompleted: (id: string) =>
+        set((state) => {
+          const todos: Todo[] = state.todos.map((t) =>
+            t.id === id ? { ...t, completed: !t.completed } : t
+          );
+
+          return { todos: todos };
+        }),
+      deleteTodo: (id: string) =>
+        set((state) => {
+          const todos: Todo[] = state.todos.filter((t) => t.id !== id);
+
+          return { todos: todos };
+        }),
     })
   )
 );

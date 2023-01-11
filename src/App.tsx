@@ -86,11 +86,11 @@ function App() {
 
   // List
   const handleTodoToggleClick = (todo: Todo) => {
-    alert(`(Task: #1) Todo was pressed: ${todo.title}`);
+    state.toogleCompleted(todo.id);
   };
 
   const handleTodoDeleteClick = (todo: Todo) => {
-    alert(`(Task: #2) Todo delete button was pressed: ${todo.title}`);
+    state.deleteTodo(todo.id);
   };
 
   // Render
