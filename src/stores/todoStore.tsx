@@ -9,6 +9,12 @@ export interface Todo {
   completed: boolean;
 }
 
+export const enum FilterState {
+  All = "all",
+  Pending = "pending",
+  Completed = "completed",
+}
+
 const initialTodos: Todo[] = [
   {
     id: v4(),
@@ -59,6 +65,8 @@ export const useTodoStore = create(
   combine(
     {
       todos: initialTodos,
+      filterState: FilterState.All,
+      filteredTodos: initialTodos,
     },
     (set) => ({
       toogleCompleted: (id: string) =>
@@ -66,15 +74,50 @@ export const useTodoStore = create(
           const todos: Todo[] = state.todos.map((t) =>
             t.id === id ? { ...t, completed: !t.completed } : t
           );
+          const filteredTodos = filterTodosOnstate(todos, state.filterState);
 
-          return { todos: todos };
+          return {
+            ...state,
+            todos: todos,
+            filteredTodos: filteredTodos,
+          };
         }),
       deleteTodo: (id: string) =>
         set((state) => {
           const todos: Todo[] = state.todos.filter((t) => t.id !== id);
+          const filteredTodos = filterTodosOnstate(todos, state.filterState);
 
-          return { todos: todos };
+          return {
+            ...state,
+            todos: todos,
+            filteredTodos: filteredTodos,
+          };
+        }),
+      setFilterState: (filterState: FilterState) =>
+        set((state) => {
+          const filteredTodos = filterTodosOnstate(state.todos, filterState);
+
+          return {
+            ...state,
+            filteredTodos: filteredTodos,
+            filterState: filterState,
+          };
         }),
     })
   )
 );
+
+const filterTodosOnstate = (todos: Todo[], filterState: FilterState) => {
+  switch (filterState) {
+    case FilterState.All:
+      return todos;
+
+    case FilterState.Pending:
+      const pendingTodos: Todo[] = todos.filter((t) => t.completed === false);
+      return pendingTodos;
+
+    case FilterState.Completed:
+      const completedTodos: Todo[] = todos.filter((t) => t.completed === true);
+      return completedTodos;
+  }
+};

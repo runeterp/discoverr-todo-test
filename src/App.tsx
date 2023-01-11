@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   AppBar,
   Box,
@@ -21,13 +21,7 @@ import {
 } from "@mui/material";
 import { FormDialog, createFormDialogStore } from "./components/FormDialog";
 import { useLocalStore } from "./utilities/store";
-import { Todo, useTodoStore } from "./stores/todoStore";
-
-export const enum FilterState {
-  All = "all",
-  Pending = "pending",
-  Completed = "completed",
-}
+import { FilterState, Todo, useTodoStore } from "./stores/todoStore";
 
 const StyledFab = styled(Fab)({
   position: "absolute",
@@ -43,8 +37,6 @@ function App() {
   const state = useTodoStore();
 
   // Filter
-  const [filterState, setFilterState] = useState(FilterState.All);
-
   const [filterAnchorEl, setFilterAnchorEl] =
     React.useState<null | HTMLElement>(null);
 
@@ -60,12 +52,13 @@ function App() {
 
   const handleFilterSelect = (filterState: FilterState) => () => {
     setFilterAnchorEl(null);
-    setFilterState(filterState);
-    alert(`(Task: #3) Filter was selected: ${filterState}`);
+
+    state.setFilterState(filterState);
+    console.log("Set filter");
   };
 
   const title = React.useMemo(() => {
-    switch (filterState) {
+    switch (state.filterState) {
       case FilterState.All:
         return "Showing all todos";
 
@@ -75,7 +68,7 @@ function App() {
       case FilterState.Completed:
         return "Showing completed todos";
     }
-  }, [filterState]);
+  }, [state.filterState]);
 
   // Form
   const useFormDialogStore = useLocalStore(createFormDialogStore());
@@ -107,7 +100,7 @@ function App() {
             {title}
           </Typography>
           <List sx={{ mb: 2 }}>
-            {state.todos.map((todo) => (
+            {state.filteredTodos.map((todo) => (
               <ListItem
                 key={todo.id}
                 secondaryAction={
@@ -150,19 +143,19 @@ function App() {
             onClose={handleFilterClose}
           >
             <MenuItem
-              selected={filterState === FilterState.All}
+              selected={state.filterState === FilterState.All}
               onClick={handleFilterSelect(FilterState.All)}
             >
               All
             </MenuItem>
             <MenuItem
-              selected={filterState === FilterState.Pending}
+              selected={state.filterState === FilterState.Pending}
               onClick={handleFilterSelect(FilterState.Pending)}
             >
               Pending
             </MenuItem>
             <MenuItem
-              selected={filterState === FilterState.Completed}
+              selected={state.filterState === FilterState.Completed}
               onClick={handleFilterSelect(FilterState.Completed)}
             >
               Completed
