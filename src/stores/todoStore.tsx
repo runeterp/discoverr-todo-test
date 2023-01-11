@@ -82,6 +82,13 @@ export const useTodoStore = create(
             filteredTodos: filteredTodos,
           };
         }),
+      addTodo: (todo: Todo) =>
+        set((state) => {
+          const newTodos = [...state.todos, todo];
+          const filteredTodos = filterTodosOnstate(newTodos, state.filterState);
+
+          return { ...state, todos: newTodos, filteredTodos: filteredTodos };
+        }),
       deleteTodo: (id: string) =>
         set((state) => {
           const todos: Todo[] = state.todos.filter((t) => t.id !== id);

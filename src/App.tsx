@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import {
   AppBar,
   Box,
@@ -22,6 +22,7 @@ import {
 import { FormDialog, createFormDialogStore } from "./components/FormDialog";
 import { useLocalStore } from "./utilities/store";
 import { FilterState, Todo, useTodoStore } from "./stores/todoStore";
+import { v4 } from "uuid";
 
 const StyledFab = styled(Fab)({
   position: "absolute",
@@ -74,7 +75,40 @@ function App() {
   const useFormDialogStore = useLocalStore(createFormDialogStore());
 
   const handleAddClick = () => {
-    alert(`(Task: #4) Add button was pressed`);
+    useFormDialogStore.getState().open({
+      title: "Add Todo",
+      fields: {
+        title: {
+          field: "title",
+          label: "Title",
+          type: "text",
+        },
+        description: {
+          field: "completed",
+          label: "Description",
+          type: "textarea",
+        },
+        completed: {
+          field: "completed",
+          label: "Has Task been completed",
+          type: "checkbox",
+        },
+      },
+      onSubmit: (values) => {
+        const todo: Todo = {
+          id: v4(),
+          title: values.title as string,
+          description: values.description as string,
+          completed: values.completed as boolean,
+        };
+
+        state.addTodo(todo);
+        console.log(useFormDialogStore.getState().dialog?._closing);
+        //useFormDialogStore.getState().close();
+        useFormDialogStore.getState().dialog = null;
+        console.log(useFormDialogStore.getState().dialog?._closing);
+      },
+    });
   };
 
   // List
