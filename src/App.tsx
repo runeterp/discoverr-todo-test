@@ -103,10 +103,7 @@ function App() {
         };
 
         state.addTodo(todo);
-        console.log(useFormDialogStore.getState().dialog?._closing);
-        //useFormDialogStore.getState().close();
-        useFormDialogStore.getState().dialog = null;
-        console.log(useFormDialogStore.getState().dialog?._closing);
+        useFormDialogStore.getState().close();
       },
     });
   };
